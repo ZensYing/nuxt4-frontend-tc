@@ -1,0 +1,331 @@
+@import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+::selection {
+  background: #ed1c24;
+  color: white;
+}
+
+/* remove blue backgound on mobile press */
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.roboto {
+  font-family: "Roboto", sans-serif;
+
+}
+.roboto-thin {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.roboto-light {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.roboto-regular {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.roboto-medium {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.roboto-bold {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.roboto-black {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.roboto-thin-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.roboto-light-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.roboto-regular-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.roboto-medium-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.roboto-bold-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.roboto-black-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+.kantumruy-pro {
+  font-family: "Kantumruy Pro", serif;
+}
+
+.kantumruy-pro-light {
+  font-family: "Kantumruy Pro", serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+
+.btn-shine {
+  transform: translate(-10%, -20%);
+  padding: 12px 48px;
+  color: #fff;
+  background: linear-gradient(to right, #9f9f9f 0, #fff 10%, #868686 20%);
+  background-position: 0;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 3s infinite linear;
+  animation-fill-mode: forwards;
+  -webkit-text-size-adjust: none;
+  font-weight: 600;
+  font-size: 16px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+@-moz-keyframes shine {
+  0% {
+    background-position: 0;
+  }
+
+  60% {
+    background-position: 180px;
+  }
+
+  100% {
+    background-position: 180px;
+  }
+}
+
+@-webkit-keyframes shine {
+  0% {
+    background-position: 0;
+  }
+
+  60% {
+    background-position: 180px;
+  }
+
+  100% {
+    background-position: 180px;
+  }
+}
+
+@-o-keyframes shine {
+  0% {
+    background-position: 0;
+  }
+
+  60% {
+    background-position: 180px;
+  }
+
+  100% {
+    background-position: 180px;
+  }
+}
+
+@keyframes shine {
+  0% {
+    background-position: 0;
+  }
+
+  60% {
+    background-position: 180px;
+  }
+
+  100% {
+    background-position: 180px;
+  }
+}
+/* =============== */
+
+/* Blurry Gradients */
+.css-blurry-gradient-blue {
+  position: fixed;
+  bottom: 25%;
+  left: 5%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  filter: blur(150px);
+  background: radial-gradient(circle at 50% 50%, rgba(77, 91, 206, 1), rgba(76, 0, 255, 0));
+  opacity: 0.4;
+  z-index: 10;
+}
+
+.css-blurry-gradient-green {
+  position: fixed;
+  top: 20%;
+  right: 20%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  filter: blur(150px);
+  background: radial-gradient(circle at 50% 50%, rgba(67, 217, 173, 1), rgba(76, 0, 255, 0));
+  opacity: 0.4;
+  z-index: 10;
+}
+
+
+
+/* assets/css/youtube-player.css */
+
+/* Global styles to add to your application */
+.youtube-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+}
+
+.youtube-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block !important; /* Force display */
+}
+
+/* Fix for YouTube API iframe visibility */
+#youtubePlayer {
+  position: relative;
+  min-height: 360px; 
+  background-color: #000;
+}
+
+#youtubePlayer iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  z-index: 1;
+}
+
+/* === */
+/* assets/css/hero.css */
+.frame {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+.frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.frame img {
+  transform: scale(1.05);
+  transition: transform 1.5s ease;
+}
+
+.frame:hover img {
+  transform: scale(1.1);
+}
+
+/* Video editor specific elements */
+.timeline-indicator {
+  height: 4px;
+  background: linear-gradient(90deg, 
+    #8b5cf6 0%, 
+    #d946ef 50%, 
+    #ec4899 100%
+  );
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.timeline-indicator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  animation: timeline-scan 3s linear infinite;
+}
+
+@keyframes timeline-scan {
+  0% {
+    left: -50%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.playhead {
+  width: 12px;
+  height: 20px;
+  background-color: white;
+  position: absolute;
+  top: -8px;
+  border-radius: 3px;
+  transform: translateX(-50%);
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* 3D transformation helpers */
+.transform-3d {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
