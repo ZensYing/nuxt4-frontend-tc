@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
     app: {
     head: {
-      title: 'Soun Soratha',
+      title: 'Book & Career Expo',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -12,7 +12,7 @@ export default defineNuxtConfig({
         {
           name: 'description',
           content:
-            "Soun Soratha, based in Phnom Penh, Cambodia.",
+            "Book & Career Expo, based in Phnom Penh, Cambodia.",
         },
         {
           name: 'keywords',
@@ -25,7 +25,7 @@ export default defineNuxtConfig({
           rel: 'stylesheet',
           href: 'https://fonts.googleapis.com/css2?family=Hanuman:wght@100;300;400;700;900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap',
         },
-        { rel: 'icon', type: 'image/x-icon', href: '/icon-green.svg' },
+        { rel: 'icon', type: 'image/x-icon', href: '/logo.ico' },
       ],
       script: [
     

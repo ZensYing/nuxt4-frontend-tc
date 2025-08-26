@@ -240,15 +240,11 @@ try {
   ));
   genderSettingsData = genderResponse.data || [];
 } catch (error) {
-  console.error('Error fetching gender settings:', error);
   genderSettingsData = [];
 }
 
 // Parse gender options from the settings
 const genderOptions = computed(() => {
-  // Debug: log the actual data structure
-  console.log('genderSettingsData:', genderSettingsData);
-  
   // Check if we have data - each gender option is a separate record
   if (genderSettingsData && genderSettingsData.length > 0) {
     return genderSettingsData.map((setting: any, index: number) => ({
