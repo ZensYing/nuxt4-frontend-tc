@@ -19,6 +19,7 @@
     "@nuxtjs/i18n": "^10.0.6",
     "@unhead/vue": "^2.0.14",
     "@vueuse/core": "^13.7.0",
+    "axios": "^1.11.0",
     "eslint": "^9.33.0",
     "motion-v": "^1.7.0",
     "nuxt": "^4.0.3",
