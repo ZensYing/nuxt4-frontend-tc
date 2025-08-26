@@ -323,7 +323,7 @@ const submitApplication = async () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(submissionData),
-      baseURL: 'http://147.93.159.71:8058'
+      baseURL: 'https://admin.baksey.asia'
     });
     
     console.log('API Response:', response);
