@@ -26,7 +26,7 @@
     </header>
 
     <!-- Progress Indicator -->
-    <div class="relative z-10 max-w-6xl mx-auto px-6 pt-2">
+    <div class="relative z-10 max-w-6xl mx-auto px-6 pt-3">
       <div class="flex items-center justify-between mb-2">
         <div class="flex items-center space-x-4">
           <!-- Step 1 -->
@@ -71,7 +71,7 @@
     </div>
 
     <!-- Main Content -->
-    <main class="relative z-10 max-w-6xl mx-auto px-6 pb-12">
+    <main class="relative z-10 max-w-6xl mx-auto px-6 pb-12 pt-2">
       <!-- Step 1: Event Selection -->
       <div v-if="currentStep === 1" class="relative">
         <!-- Subtle Glow Effect -->
@@ -93,7 +93,7 @@
           </div>
 
           <div class="p-8">
-            <p class="text-green-600 text-lg mb-8 text-center kantumruy-pro font-bold">
+            <p class="text-green-600 text-sm md:text-lg mb-8 text-center kantumruy-pro font-bold">
               ជ្រើសរើសផ្នែកព្រឹត្តិការណ៍ដែលអ្នកចាប់អារម្មណ៍ក្នុងការចូលរួម។ អ្នកអាចជ្រើសរើសផ្នែកជាច្រើន។
             </p>
 
@@ -128,10 +128,10 @@
 
                 <!-- Event Content -->
                 <div class="pr-8">
-                  <h4 class="text-lg font-bold text-gray-900 mb-2">
+                  <h4 class="text-sm md:text-lg font-bold text-gray-900 mb-2">
                     {{ event.name }}
                   </h4>
-                  <p class="text-sm text-gray-600">
+                  <p class="text-xs text-gray-600">
                     Click to {{ selectedEvents.includes(event.id) ? 'remove from' : 'add to' }} your selection
                   </p>
                 </div>
@@ -175,9 +175,9 @@
               <button 
                 @click="nextStep"
                 :disabled="selectedEvents.length === 0"
-                class="px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl  text-white font-bold text-lg shadow-xl hover:from-red-700 hover:to-red-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 hover:shadow-2xl transform hover:-translate-y-1 disabled:hover:transform-none"
+                class="px-3 py-2 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl  text-white font-bold text-lg shadow-xl hover:from-red-700 hover:to-red-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 hover:shadow-2xl transform hover:-translate-y-1 disabled:hover:transform-none"
               >
-                <div class="flex items-center space-x-3 kantumruy-pro">
+                <div class="flex items-center space-x-3 kantumruy-pro text-md">
                   <span>បន្តទៅការចុះឈ្មោះ</span>
                   <Icon name="heroicons:arrow-right" class="w-5 h-5" />
                 </div>
@@ -271,7 +271,7 @@
                   <input
                     v-model="form.phone"
                     type="tel"
-                    placeholder="(855) XXX-XXXX"
+                    placeholder="XXX-XXX-XXXX"
                     class="w-full px-4 py-4 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200 hover:border-gray-400 hover:bg-white"
                     required
                   />
@@ -314,35 +314,34 @@
             </section>
 
             <!-- Action Buttons -->
-            <section class="pt-8">
+            <section class="">
               <div class="flex flex-col sm:flex-row gap-4">
                 <!-- Back Button -->
-                <button 
-                  type="button"
-                  @click="previousStep"
-                  class="sm:w-auto px-8 py-4 bg-gray-100 border border-gray-300 rounded-2xl text-gray-700 font-medium text-lg hover:bg-gray-200 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                >
-                  <div class="flex items-center justify-center space-x-3 kantumruy-pro">
-                    <Icon name="heroicons:arrow-left" class="w-5 h-5" />
-                    <span>ត្រឡប់ក្រោយ (Back)</span>
-                  </div>
-                </button>
-
                 <!-- Submit Button -->
                 <button 
                   type="submit"
                   :disabled="!isFormValid || isSubmitting"
-                  class="flex-1 relative overflow-hidden px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl text-white font-bold text-lg shadow-xl hover:from-red-700 hover:to-red-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 hover:shadow-2xl transform hover:-translate-y-1 disabled:hover:transform-none"
+                  class="flex-1 relative overflow-hidden p-3 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl text-white font-bold text-lg shadow-xl hover:from-red-700 hover:to-red-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 hover:shadow-2xl transform hover:-translate-y-1 disabled:hover:transform-none"
                 >
                   <div v-if="isSubmitting" class="flex items-center justify-center space-x-3">
                     <div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     <span>Submitting Registration...</span>
                   </div>
-                  <div v-else class="flex items-center justify-center space-x-3 kantumruy-pro font-bold">
+                  <div v-else class="flex items-center justify-center space-x-3 text-sm kantumruy-pro font-bold">
                     <Icon name="heroicons:paper-airplane" class="w-6 h-6" />
                     <span>បញ្ជូនការចុះឈ្មោះ</span>
                   </div>
                 </button>
+                  <NuxtLink 
+                  type="button"
+                  @click="previousStep"
+                  class="sm:w-auto px-8 py-4  transition-all cursor-pointer  duration-300 focus:outline-none "
+                >
+                  <div class="flex items-center text-sm justify-center space-x-3 kantumruy-pro">
+                    <Icon name="heroicons:arrow-left" class="w-5 h-5" />
+                    <span>ត្រឡប់ក្រោយ (Back)</span>
+                  </div>
+                </NuxtLink>
               </div>
               
               <p class="text-sm text-gray-600 text-center mt-4">
@@ -481,7 +480,7 @@ let jobPositions: IJob[] = [];
 try {
   const jobResponse = await (<Promise<IResponse<IJob[]>>>(
     useApi(
-      `/items/job?filter[status]=published&fields=id,name`,
+      `/items/job?filter[status]=published&fields=id,name,name_kh`,
       { method: 'GET' }
     )
   ));
@@ -495,7 +494,7 @@ let genderSettingsData: IGender[] = [];
 try {
   const genderResponse = await (<Promise<IResponse<IGender[]>>>(
     useApi(
-      `/items/settings?filter[status]=published&fields=gender`,
+      `/items/settings?filter[status]=published&fields=gender,gender_kh`,
       { method: 'GET' }
     )
   ));
@@ -509,22 +508,34 @@ const genderOptions = computed(() => {
   if (genderSettingsData && genderSettingsData.length > 0) {
     return genderSettingsData.map((setting: any, index: number) => ({
       id: setting.id || (index + 1),
-      name: setting.gender || `Option ${index + 1}`
+      name: setting.gender && setting.gender_kh 
+        ? `${setting.gender} (${setting.gender_kh})`
+        : setting.gender || setting.gender_kh || `Option ${index + 1}`
     }));
   }
   
   return [
-    { id: 1, name: 'Male' },
-    { id: 2, name: 'Female' },
-    { id: 3, name: 'Other' },
-    { id: 4, name: 'Prefer not to say' }
+    { id: 1, name: 'Male (ប្រុស)' },
+    { id: 2, name: 'Female (ស្រី)' },
+    { id: 3, name: 'Other (ផ្សេងៗ)' },
+    { id: 4, name: 'Prefer not to say (មិនចង់បញ្ជាក់)' }
   ];
 });
 
 // Job options computed property
 const jobOptions = computed(() => {
-  return jobPositions || [];
+  return jobPositions.map(job => ({
+    id: job.id,
+    name: job.name && job.name_kh 
+      ? `${job.name} (${job.name_kh})`
+      : job.name || job.name_kh || 'Unknown Position'
+  }));
 });
+
+// Job options computed property
+// const jobOptions = computed(() => {
+//   return jobPositions || [];
+// });
 
 // Event options computed property
 const eventOptions = computed(() => {
