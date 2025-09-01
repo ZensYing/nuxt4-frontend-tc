@@ -34,7 +34,7 @@
           <div class="absolute -inset-2 bg-gradient-to-r from-red-300 to-pink-300 rounded-3xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
           <div class="relative bg-white/90 backdrop-blur-xl border border-white/40 rounded-3xl p-4 shadow-2xl">
             <img 
-              src="/images/Load.png" 
+              src="/images/compress-load.jpg" 
               alt="Book and Career Expo - កម្ពុជាឡើកទី១" 
               class="w-full max-w-md mx-auto rounded-2xl shadow-lg"
               @error="handleImageError"

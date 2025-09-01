@@ -34,17 +34,17 @@ onMounted(async () => {
     // Load event sections
     setTimeout(() => {
       eventSectionsReady.value = true
-    }, 500)
+    }, 1000)
 
     // Load job positions
     setTimeout(() => {
       jobsReady.value = true
-    }, 500)
+    }, 1500)
 
     // Load settings
     setTimeout(() => {
       settingsReady.value = true
-    }, 500)
+    }, 2000)
 
   } catch (error) {
     console.error('Error loading initial data:', error)
