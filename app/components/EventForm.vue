@@ -337,7 +337,7 @@
                   @click="previousStep"
                   class="sm:w-auto px-8 py-4  transition-all cursor-pointer  duration-300 focus:outline-none "
                 >
-                  <div class="flex items-center text-sm justify-center space-x-3 kantumruy-pro">
+                  <div class="flex items-center text-sm justify-center text-gray-500 space-x-3 kantumruy-pro">
                     <Icon name="heroicons:arrow-left" class="w-5 h-5" />
                     <span>ត្រឡប់ក្រោយ (Back)</span>
                   </div>
