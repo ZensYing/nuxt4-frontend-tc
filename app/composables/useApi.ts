@@ -196,7 +196,10 @@ export const useApiBatch = async <T = any>(
 ): Promise<T[]> => {
   try {
     const responses = await Promise.allSettled(
-      requests.map(({ endpoint, options = {} }) => useApi<T>(endpoint, options))
+      requests.map(({ endpoint, options }) =>
+  useApi<T>(endpoint, options ?? { method: 'GET' } as IAPIOption)
+)
+
     )
     
     const results: T[] = []

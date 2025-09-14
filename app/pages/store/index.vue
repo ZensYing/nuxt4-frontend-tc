@@ -366,7 +366,7 @@ const fetchStores = async () => {
       method: 'GET',
       params: {
         'filter[role][_eq]': VENDOR_ROLE_ID,
-        'fields': 'id,first_name,last_name,email,phone,avatar,date_created,status,title,address',
+        'fields': 'id,first_name,last_name,email,phone,avatar,date_created,status,title,address,store_name,thumbnail',
         'sort': 'date_created'
       }
     })
@@ -378,6 +378,7 @@ const fetchStores = async () => {
       id: vendor.id,
       name: vendor.title || `${vendor.first_name}'s Store`,
       description: `Welcome to ${vendor.first_name}'s marketplace store`,
+      store_name: vendor.store_name,
       location: vendor.address?.city && vendor.address?.state 
         ? `${vendor.address.city}, ${vendor.address.state}` 
         : null,
@@ -412,8 +413,15 @@ const fetchStores = async () => {
 }
 
 const viewStore = (store: any) => {
-  // Navigate to individual store page
-  navigateTo(`/store/${store.id}`)
+  const { getStoreUrl, formatStoreSlug } = useStoreUrl()
+  const url = getStoreUrl(store)
+  
+  console.log('Store data:', store)
+  console.log('Generated URL:', url)
+  console.log('Store name used:', store.store_name || store.name || `${store.first_name}s Store`)
+  console.log('Generated slug:', formatStoreSlug(store.store_name || store.name || `${store.first_name}s Store`))
+  
+  navigateTo(url)
 }
 
 const contactStore = (store: any) => {

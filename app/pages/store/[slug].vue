@@ -1,4 +1,4 @@
-<!-- app/pages/store/[id].vue -->
+<!-- app/pages/store/[slug].vue -->
 <template>
   <div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
     <!-- Header Section -->
@@ -290,16 +290,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 // Define page meta
 definePageMeta({
   middleware: 'auth'
 })
 
-// Get route params
+// Get route params - using slug instead of id
 const route = useRoute()
-const storeId = route.params.id as string
+const storeSlug = route.params.slug as string
+const { parseStoreSlug } = useStoreUrl()
 
 // State
 const store = ref<any>(null)
@@ -328,36 +329,155 @@ const formatDateShort = (dateStr: string) => {
 }
 
 // Methods
+// Updated fetchStore method for [slug].vue with Khmer support
 const fetchStore = async () => {
   isLoading.value = true
   error.value = null
   
   try {
-    // Fetch specific user/vendor by ID using useApi
-    const response = await useApi<{ data: any }>(`/users/${storeId}`, {
-      method: 'GET',
-      params: {
-        'fields': 'id,first_name,last_name,email,phone,avatar,date_created,status,title,description,address,thumbnail',
-        'filter[role][_eq]': VENDOR_ROLE_ID
-      }
-    })
+    const { parseStoreSlug, getSearchVariations, formatStoreSlug, transliterateKhmer } = useStoreUrl()
+    const { slug: searchSlug, storeId } = parseStoreSlug(storeSlug.replace('@', ''))
+    
+    console.log('Original slug:', storeSlug)
+    console.log('Parsed slug:', searchSlug)
+    console.log('Store ID:', storeId)
+    
+    let foundVendor = null
+    
+    // Strategy 1: If we have a store ID, try to find by ID first
+    if (storeId) {
+      try {
+        const response = await useApi<{ data: any[] }>('/users', {
+          method: 'GET',
+          params: {
+            'fields': 'id,first_name,last_name,email,phone,avatar,date_created,status,title,description,address,thumbnail,store_name',
+            'filter[role][_eq]': VENDOR_ROLE_ID,
+            'filter[id][_contains]': storeId, // Partial match on ID
+            'limit': 5
+          }
+        })
 
-    if (!response.data) {
+        if (response.data && response.data.length > 0) {
+          // Find exact ID match or close match
+          foundVendor = response.data.find(vendor => 
+            vendor.id.toLowerCase().includes(storeId.toLowerCase())
+          ) || response.data[0]
+          
+          console.log('Found vendor by ID:', foundVendor?.store_name || foundVendor?.title)
+        }
+      } catch (idError) {
+        console.log('ID search failed, trying other methods:', idError)
+      }
+    }
+    
+    // Strategy 2: If no ID match, get all vendors and match locally
+    if (!foundVendor) {
+      const response = await useApi<{ data: any[] }>('/users', {
+        method: 'GET',
+        params: {
+          'fields': 'id,first_name,last_name,email,phone,avatar,date_created,status,title,description,address,thumbnail,store_name',
+          'filter[role][_eq]': VENDOR_ROLE_ID,
+          'sort': 'date_created'
+        }
+      })
+
+      if (!response.data || response.data.length === 0) {
+        throw new Error('No vendors found')
+      }
+
+      const searchVariations = getSearchVariations(searchSlug)
+      console.log('Search variations:', searchVariations)
+
+      // Try multiple matching strategies
+      for (const vendor of response.data) {
+        const vendorStoreName = vendor.store_name || vendor.title || `${vendor.first_name}s Store`
+        const vendorSlug = formatStoreSlug(vendorStoreName)
+        
+        // Strategy 2a: Direct slug match
+        if (vendorSlug === searchSlug) {
+          foundVendor = vendor
+          console.log('Found direct slug match:', vendorStoreName)
+          break
+        }
+        
+        // Strategy 2b: Match against search variations
+        for (const variation of searchVariations) {
+          if (vendorSlug === variation || 
+              vendorSlug.includes(variation) || 
+              variation.includes(vendorSlug)) {
+            foundVendor = vendor
+            console.log('Found variation match:', vendorStoreName, 'with variation:', variation)
+            break
+          }
+        }
+        
+        if (foundVendor) break
+        
+        // Strategy 2c: Transliterate vendor name and compare
+        const transliteratedVendorName = transliterateKhmer(vendorStoreName.toLowerCase())
+        const transliteratedSearch = transliterateKhmer(searchSlug)
+        
+        if (transliteratedVendorName.includes(transliteratedSearch) ||
+            transliteratedSearch.includes(transliteratedVendorName)) {
+          foundVendor = vendor
+          console.log('Found transliteration match:', vendorStoreName)
+          break
+        }
+        
+        // Strategy 2d: Original store_name contains search (for Khmer text)
+        if (vendor.store_name && 
+            (vendor.store_name.toLowerCase().includes(searchSlug) ||
+             searchSlug.includes(vendor.store_name.toLowerCase()))) {
+          foundVendor = vendor
+          console.log('Found original name match:', vendor.store_name)
+          break
+        }
+      }
+    }
+    
+    // Strategy 3: Fuzzy matching for Khmer text
+    if (!foundVendor) {
+      const response = await useApi<{ data: any[] }>('/users', {
+        method: 'GET',
+        params: {
+          'fields': 'id,first_name,last_name,email,phone,avatar,date_created,status,title,description,address,thumbnail,store_name',
+          'filter[role][_eq]': VENDOR_ROLE_ID,
+          'sort': 'date_created'
+        }
+      })
+
+      // Try matching by first few characters (useful for Khmer)
+      const searchPrefix = searchSlug.substring(0, 3)
+      
+      for (const vendor of response.data) {
+        const vendorName = vendor.store_name || vendor.title || `${vendor.first_name}s Store`
+        const vendorPrefix = formatStoreSlug(vendorName).substring(0, 3)
+        
+        if (searchPrefix === vendorPrefix) {
+          foundVendor = vendor
+          console.log('Found prefix match:', vendorName)
+          break
+        }
+      }
+    }
+
+    if (!foundVendor) {
       throw new Error('Store not found or user is not a vendor')
     }
 
-    const vendor = response.data
+    const vendor = foundVendor
 
-    // Debug: Log the vendor data to see what we're getting
-    console.log('Vendor data:', vendor)
-    console.log('Thumbnail value:', vendor.thumbnail)
-    console.log('Avatar value:', vendor.avatar)
+    // Debug logging
+    console.log('Final vendor data:', vendor)
+    console.log('Store name:', vendor.store_name)
+    console.log('Title:', vendor.title)
 
     // Transform vendor data into store format
     store.value = {
       id: vendor.id,
-      name: vendor.title || `${vendor.first_name}'s Store`,
+      name: vendor.store_name || vendor.title || `${vendor.first_name}'s Store`,
       description: vendor.description || `Welcome to ${vendor.first_name}'s marketplace store. We offer quality products and excellent customer service.`,
+      store_name: vendor.store_name,
       location: vendor.address?.city && vendor.address?.state 
         ? `${vendor.address.city}, ${vendor.address.state}` 
         : null,
@@ -374,7 +494,7 @@ const fetchStore = async () => {
         last_name: vendor.last_name,
         avatar: vendor.avatar
       },
-      image: vendor.thumbnail || vendor.avatar // Using vendor thumbnail first, then avatar as fallback
+      image: vendor.thumbnail || vendor.avatar
     }
 
   } catch (apiError: any) {
@@ -398,7 +518,6 @@ const fetchStore = async () => {
     isLoading.value = false
   }
 }
-
 const contactOwner = () => {
   if (store.value?.email) {
     window.open(`mailto:${store.value.email}`, '_blank')
@@ -451,8 +570,8 @@ const reportStore = () => {
 
 // Initialize
 onMounted(async () => {
-  if (!storeId) {
-    error.value = 'Invalid store ID'
+  if (!storeSlug) {
+    error.value = 'Invalid store URL'
     isLoading.value = false
     return
   }
@@ -481,7 +600,6 @@ useHead({
   ]
 })
 </script>
-
 <style scoped>
 /* Add any additional custom styles here if needed */
 </style>

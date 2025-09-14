@@ -13,9 +13,10 @@ type User = {
   avatar: string;
   cart?: any;
   address?: any;
-  department?: Department;
+  department?: Department ;
   signature: string;
   title: string;
+  phone: string;
 };
 
 type Department = {
@@ -24,7 +25,6 @@ type Department = {
   id: string;
   title: string;
 };
-
 type Role = {
   id: string;
   name: string;
@@ -35,39 +35,10 @@ type Credentials = {
   password: string;
 };
 
-type TokenData = {
-  access_token: string;
-  refresh_token: string;
-  expires_at: number; // Unix timestamp
-};
-
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null);
   const accessToken = ref<string | null>(null);
   const isLoading = ref<boolean>(false);
-  const refreshPromise = ref<Promise<boolean> | null>(null);
-
-  // Token expiry helpers
-  const TOKEN_EXPIRY_DAYS = 1;
-  const getTokenExpiryTime = () => Date.now() + (TOKEN_EXPIRY_DAYS * 24 * 60 * 60 * 1000);
-  
-  const isTokenExpired = (): boolean => {
-    const expiryTime = localStorage.getItem('token_expires_at');
-    if (!expiryTime) return true;
-    return Date.now() > parseInt(expiryTime);
-  };
-
-  const setTokenData = (tokenData: TokenData) => {
-    accessToken.value = tokenData.access_token;
-    localStorage.setItem('refresh_token', tokenData.refresh_token);
-    localStorage.setItem('token_expires_at', tokenData.expires_at.toString());
-  };
-
-  const clearTokenData = () => {
-    accessToken.value = null;
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('token_expires_at');
-  };
 
   async function logout() {
     try {
@@ -81,82 +52,42 @@ export const useAuthStore = defineStore('auth', () => {
       console.error('Logout error:', error);
     } finally {
       user.value = null;
-      clearTokenData();
-      refreshPromise.value = null;
+      accessToken.value = null;
+      localStorage.removeItem('refresh_token');
       return navigateTo('/auth');
     }
   }
 
-  async function refresh(): Promise<boolean> {
-    // Prevent multiple simultaneous refresh attempts
-    if (refreshPromise.value) {
-      return refreshPromise.value;
-    }
-
-    const refreshToken = localStorage.getItem('refresh_token');
-    
-    if (!refreshToken) {
-      return false;
-    }
-
-    // Check if token is expired
-    if (isTokenExpired()) {
-      console.log('Refresh token expired, redirecting to login');
-      clearTokenData();
-      await navigateTo('/auth');
-      return false;
-    }
-
-    refreshPromise.value = (async () => {
+  async function refresh() {
+    if (localStorage.getItem('refresh_token')) {
       try {
-        const refresh_data = await useApi<{ data: TokenData }>('/auth/refresh', {
+        const refresh_data = await useApi<{ data: { access_token: string; refresh_token: string } }>('/auth/refresh', {
           method: 'POST',
           headers: { Authorization: '' },
-          data: { refresh_token: refreshToken },
+          data: { refresh_token: localStorage.getItem('refresh_token') },
         });
-
-        // Set new expiry time (1 day from now)
-        const tokenData: TokenData = {
-          ...refresh_data.data,
-          expires_at: getTokenExpiryTime()
-        };
-
-        setTokenData(tokenData);
-        
-        if (!user.value) {
-          await fetchUser();
-        }
-        
+        accessToken.value = refresh_data.data.access_token;
+        localStorage.setItem('refresh_token', refresh_data.data.refresh_token);
+        if (!user.value) await fetchUser();
         return true;
       } catch (error) {
         console.error('Token refresh error:', error);
-        clearTokenData();
-        user.value = null;
-        await navigateTo('/auth');
+        localStorage.removeItem('refresh_token');
         return false;
-      } finally {
-        refreshPromise.value = null;
       }
-    })();
-
-    return refreshPromise.value;
+    }
+    return false;
   }
 
   async function login(credentials: Credentials) {
     isLoading.value = true;
     try {
-      const login = await useApi<{ data: TokenData }>('/auth/login', {
+      const login = await useApi<{ data: { access_token: string; refresh_token: string } }>('/auth/login', {
         method: 'POST',
         data: credentials,
       });
-
-      // Set token with expiry time
-      const tokenData: TokenData = {
-        ...login.data,
-        expires_at: getTokenExpiryTime()
-      };
-
-      setTokenData(tokenData);
+      localStorage.setItem('refresh_token', login.data.refresh_token);
+      accessToken.value = login.data.access_token;
       await fetchUser();
       
       return navigateTo('/');
@@ -167,10 +98,10 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function fetchUser() {
+ async function fetchUser() {
     try {
       const response = await useApi<{ data: User[] }>(
-        `/users?filter[id]=$CURRENT_USER&fields=id,first_name,last_name,email,avatar,role.id,role.name,phone, address,thumbnail`,
+        `/users?filter[id]=$CURRENT_USER&fields=id,first_name,last_name,email,avatar,role.id,role.name,phone, address,thumbnail,store_name`,
         {
           method: 'GET',
         }
@@ -189,6 +120,8 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  // Update the user profile
+
   async function updateUserProfile(
     updateData: Partial<User>,
     avatarFile?: File,
@@ -197,7 +130,6 @@ export const useAuthStore = defineStore('auth', () => {
     if (!user.value) {
       throw new Error('User is not authenticated');
     }
-
     try {
       if (avatarFile) {
         const formData = new FormData();
@@ -213,7 +145,6 @@ export const useAuthStore = defineStore('auth', () => {
 
         updateData.avatar = fileRes.data.id;
       }
-
       if (signatureFile) {
         const signatureForm = new FormData();
         signatureForm.append('file', signatureFile);
@@ -232,48 +163,22 @@ export const useAuthStore = defineStore('auth', () => {
         data: updateData,
       });
       
+      // await refresh();
       await fetchUser();
+      // user.value = { ...user.value, ...updateData };
     } catch (error) {
       console.error('Failed to update profile:', error);
       throw error;
     }
   }
   
-  async function checkAuth(): Promise<boolean> {
+  async function checkAuth() {
     const hasToken = !!localStorage.getItem('refresh_token');
-    
-    if (!hasToken) {
-      return false;
-    }
-
-    // Check if token is expired
-    if (isTokenExpired()) {
-      console.log('Token expired, clearing auth data');
-      clearTokenData();
-      return false;
-    }
-
-    // If we have a valid token but no access token, refresh it
-    if (!accessToken.value) {
+    if (hasToken) {
       return await refresh();
     }
-
-    // If we don't have user data, fetch it
-    if (!user.value) {
-      await fetchUser();
-    }
-
-    return true;
+    return false;
   }
-
-  // Method to check if we need to refresh token soon (e.g., within 1 hour)
-  const shouldRefreshToken = (): boolean => {
-    const expiryTime = localStorage.getItem('token_expires_at');
-    if (!expiryTime) return false;
-    
-    const oneHourFromNow = Date.now() + (60 * 60 * 1000);
-    return parseInt(expiryTime) < oneHourFromNow;
-  };
 
   return {
     user,
@@ -284,8 +189,6 @@ export const useAuthStore = defineStore('auth', () => {
     refresh,
     fetchUser,
     checkAuth,
-    updateUserProfile,
-    isTokenExpired,
-    shouldRefreshToken,
+    updateUserProfile
   };
 });
