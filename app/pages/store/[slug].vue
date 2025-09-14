@@ -293,9 +293,9 @@
 import { ref, onMounted, computed } from 'vue'
 
 // Define page meta
-definePageMeta({
-  middleware: 'auth'
-})
+// definePageMeta({
+//   middleware: 'auth'
+// })
 
 // Get route params - using slug instead of id
 const route = useRoute()

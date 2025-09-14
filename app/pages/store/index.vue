@@ -269,9 +269,9 @@
 import { ref, computed, onMounted } from 'vue'
 
 // Define page meta
-definePageMeta({
-  middleware: 'auth'
-})
+// definePageMeta({
+//   middleware: 'auth'
+// })
 
 
 const formatDate = (dateStr: string) => {
