@@ -37,6 +37,7 @@ export default defineNuxtConfig({
       API_BASE_URL: process.env.API_BASE_URL ,
     },
   },
+  
   modules: [
     '@nuxt/eslint',
     '@nuxt/image',
@@ -45,7 +46,12 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     'motion-v/nuxt',
     '@nuxtjs/google-fonts',
-    '@nuxtjs/i18n'
+    '@nuxtjs/i18n',
+    '@pinia/nuxt'
   ],
-  css: ['~/assets/css/main.css', '~/assets/css/index.css']
+  css: ['~/assets/css/main.css', '~/assets/css/index.css'],
+  ssr: true,
+  build: {
+    transpile: ['@pinia/nuxt']
+  }
 })
