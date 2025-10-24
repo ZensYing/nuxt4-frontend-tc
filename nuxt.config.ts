@@ -53,5 +53,10 @@ export default defineNuxtConfig({
   ssr: true,
   build: {
     transpile: ['@pinia/nuxt']
-  }
+  },
+  //  i18n: {
+  //   defaultLocale: 'en', // or your default locale
+  //   locales: ['en', 'km'], // your locales
+  //   strategy: 'prefix_except_default'
+  // }
 })
