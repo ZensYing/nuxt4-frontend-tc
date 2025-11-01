@@ -3,12 +3,12 @@
   "outputDirectory": ".output/public",
   "installCommand": "yarn install --frozen-lockfile",
   "functions": {
-    "api/index.mjs": {
+    "api/index.js": {
       "runtime": "nodejs20.x",
       "handler": ".output/server/index.mjs"
     }
   },
   "routes": [
-    { "src": "/(.*)", "dest": "/api/index.mjs" }
+    { "src": "/(.*)", "dest": "/api/index.js" }
   ]
 }
