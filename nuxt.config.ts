@@ -33,10 +33,15 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
+    DIRECTUS_URL: process.env.DIRECTUS_URL,
+    DIRECTUS_TOKEN: process.env.DIRECTUS_TOKEN,
+    API_ENCRYPT_SECRET: process.env.API_ENCRYPT_SECRET, // ✅ add this
     public: {
-      API_BASE_URL: process.env.API_BASE_URL ,
+      SITE_URL: process.env.SITE_URL || 'https://tech-cambodia.com',
     },
   },
+  nitro: { preset: 'node-server' },
+  typescript: { strict: true },
   
   modules: [
     '@nuxt/eslint',

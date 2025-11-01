@@ -2,7 +2,7 @@
 <template>
   <div>
     <LayoutNavbar />
-    <div>
+    <div class="pt-18">
       <slot />
     </div>
   </div>
