@@ -1,5 +1,14 @@
 {
   "buildCommand": "nuxt build",
   "outputDirectory": ".output/public",
-  "installCommand": "yarn install --frozen-lockfile"
+  "installCommand": "yarn install --frozen-lockfile",
+  "functions": {
+    "api/index.mjs": {
+      "runtime": "nodejs20.x",
+      "handler": ".output/server/index.mjs"
+    }
+  },
+  "routes": [
+    { "src": "/(.*)", "dest": "/api/index.mjs" }
+  ]
 }
